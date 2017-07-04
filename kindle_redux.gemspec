@@ -24,6 +24,8 @@ Gem::Specification.new do |spec|
 	spec.add_runtime_dependency 'googleauth'
 	spec.add_runtime_dependency 'googleauth/stores/file_token_store'
 	spec.add_runtime_dependency 'fileutils'
-	spec.add_runtime_dependency 'rasem' '~> 0.7'
+	# spec.add_runtime_dependency 'rasem' '~> 0.7'
+	spec.add_runtime_dependency 'victor'
+
 
 end

@@ -52,21 +52,30 @@ class KindleRedux::Modules::Birthdays
 		end.id
 	end
 
-	def render(canvas)
-
-		response = service.list_events(
+	def data_source
+		@data ||= service.list_events(
 			calendar_id,
 			max_results: 10,
 			single_events: true,
 			order_by: 'startTime',
 			time_min: Time.now.iso8601
-		)
+		).items
+	end
 
-		puts "Upcoming birthdays:"
-		puts "No upcoming events found" if response.items.empty?
-		response.items.each do |event|
-			start = event.start.date || event.start.date_time
-			puts "- #{event.summary} (#{start})"
+	def render
+		canvas.text "Upcoming birthdays:", x: 10, y: 10, font_size: 30, font_family: 'garamond'
+
+		if data_source.empty?
+			canvas.text "No upcoming events found", x: 10, y: 20, font_size: 12, font_family: 'arial'
+		else
+			pp data_source
+			data_source.each_with_index do |event, i|
+				pp event
+				start = event.start.date || event.start.date_time
+				canvas.text "- #{event.summary} (#{start})", x: 10, y: 10 * (i + 2), font_size: 12, font_family: 'arial'
+			end
 		end
+
+		canvas.render
 	end
 end

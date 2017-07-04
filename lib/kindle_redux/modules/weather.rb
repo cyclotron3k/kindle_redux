@@ -48,7 +48,7 @@ class KindleRedux::Modules::Weather
 		]
 	end
 
-	def render(canvas)
+	def render
 		doc = Nokogiri::XML open(@url)
 		doc.at_css('area[aac="NSW_PT132"]').css('forecast-period').each do |forecast|
 			puts @day_icons[forecast.at_css('element[type="forecast_icon_code"]').text.to_i]

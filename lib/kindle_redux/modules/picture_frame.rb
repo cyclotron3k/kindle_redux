@@ -1,4 +1,4 @@
-class KindleRedux::Modules::Blank
+class KindleRedux::Modules::PictureFrame
 	include KindleRedux::Modules::Module
 
 	def render

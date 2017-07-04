@@ -52,7 +52,7 @@ class KindleRedux::Modules::Calendar
 		end.id
 	end
 
-	def render(canvas)
+	def render
 
 		response = service.list_events(
 			calendar_id,

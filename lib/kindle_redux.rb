@@ -4,8 +4,10 @@ require 'kindle_redux/modules/calendar'
 require 'kindle_redux/modules/birthdays'
 require 'kindle_redux/modules/shopping'
 require 'kindle_redux/modules/weather'
+require 'kindle_redux/modules/picture_frame'
 
 require 'parallel'
+require 'victor'
 
 class KindleRedux
 
@@ -13,10 +15,11 @@ class KindleRedux
 		@width  = params[:width]  || 600
 		@height = params[:height] || 800
 		@panels = params[:panels] || []
+		@rotation = :none
 	end
 
 	def render(filename)
-		canvas = [] # SVG.new
+		canvas = Victor::SVG.new(:width => @width, :height => @height)
 
 		rows = @panels.count
 		@panels.each_with_index do |row, j|
@@ -27,16 +30,16 @@ class KindleRedux
 				panel.dimensions(
 					width:  width,
 					height: height,
-					top:    (j      * height),
-					right:  (i.next * width),
-					bottom: (j.next * height),
-					left:   (i      * width),
+					# top:    (j      * height),
+					# right:  (i.next * width),
+					# bottom: (j.next * height),
+					# left:   (i      * width),
 				)
 			end
 		end
 
-		Parallel.each(@panels.flatten(1), in_threads: 4) do |panel|
-			panel.render(canvas)
+		svg_panels = Parallel.map(@panels.flatten(1), in_threads: 4) do |panel|
+			panel.render
 		end
 	end
 
