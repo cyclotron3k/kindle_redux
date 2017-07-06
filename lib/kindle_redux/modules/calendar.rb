@@ -12,6 +12,26 @@ class KindleRedux::Modules::Calendar
 	CREDENTIALS_PATH = File.join(Dir.home, '.credentials', "calendar-ruby-quickstart.yaml")
 	SCOPE = Google::Apis::CalendarV3::AUTH_CALENDAR_READONLY
 
+	def render
+
+		response = service.list_events(
+			calendar_id,
+			max_results: 10,
+			single_events: true,
+			order_by: 'startTime',
+			time_min: Time.now.iso8601
+		)
+
+		puts "Upcoming events:"
+		puts "No upcoming events found" if response.items.empty?
+		response.items.each do |event|
+			start = event.start.date || event.start.date_time
+			puts "- #{event.summary} (#{start})"
+		end
+	end
+
+	private
+
 	##
 	# Ensure valid credentials, either by restoring from the saved credentials
 	# files or intitiating an OAuth2 authorization. If authorization is required,
@@ -52,21 +72,4 @@ class KindleRedux::Modules::Calendar
 		end.id
 	end
 
-	def render
-
-		response = service.list_events(
-			calendar_id,
-			max_results: 10,
-			single_events: true,
-			order_by: 'startTime',
-			time_min: Time.now.iso8601
-		)
-
-		puts "Upcoming events:"
-		puts "No upcoming events found" if response.items.empty?
-		response.items.each do |event|
-			start = event.start.date || event.start.date_time
-			puts "- #{event.summary} (#{start})"
-		end
-	end
 end

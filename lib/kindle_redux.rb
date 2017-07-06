@@ -11,6 +11,9 @@ require 'victor'
 
 class KindleRedux
 
+	ROOT_DIR = Pathname.new(__FILE__).join("../..")
+	ASSET_DIR = ROOT_DIR.join("assets")
+
 	def initialize(params)
 		@width  = params[:width]  || 600
 		@height = params[:height] || 800

@@ -4,4 +4,6 @@ class KindleRedux::Modules::Blank
 	def render
 		# do nothing
 	end
+
+	private
 end

@@ -2,10 +2,8 @@ class KindleRedux
 	module Modules
 		module Module
 
-			def dimensions(dimensions) #, canvas)
+			def dimensions(dimensions)
 				@dimensions = dimensions
-				# @canvas = canvas
-				# @viewport = canvas.group
 				self
 			end
 

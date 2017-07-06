@@ -12,6 +12,24 @@ class KindleRedux::Modules::Birthdays
 	CREDENTIALS_PATH = File.join(Dir.home, '.credentials', "calendar-ruby-quickstart.yaml")
 	SCOPE = Google::Apis::CalendarV3::AUTH_CALENDAR_READONLY
 
+	def render
+		canvas.text "Upcoming Birthdays!", x: 10, y: 40, font_size: 30, font_family: 'garamond'
+
+		if data_source.empty?
+			canvas.text "No upcoming events found", x: 10, y: 62, font_size: 12, font_family: 'arial'
+		else
+			pp data_source
+			data_source.each_with_index do |event, i|
+				pp event
+				start = event.start.date || event.start.date_time
+				canvas.text "#{event.summary} (#{start})", x: 10, y: 62 + (18 * i), font_size: 12, font_family: 'arial'
+			end
+		end
+
+		canvas.render
+	end
+
+	private
 	##
 	# Ensure valid credentials, either by restoring from the saved credentials
 	# files or intitiating an OAuth2 authorization. If authorization is required,
@@ -62,20 +80,4 @@ class KindleRedux::Modules::Birthdays
 		).items
 	end
 
-	def render
-		canvas.text "Upcoming birthdays:", x: 10, y: 10, font_size: 30, font_family: 'garamond'
-
-		if data_source.empty?
-			canvas.text "No upcoming events found", x: 10, y: 20, font_size: 12, font_family: 'arial'
-		else
-			pp data_source
-			data_source.each_with_index do |event, i|
-				pp event
-				start = event.start.date || event.start.date_time
-				canvas.text "- #{event.summary} (#{start})", x: 10, y: 10 * (i + 2), font_size: 12, font_family: 'arial'
-			end
-		end
-
-		canvas.render
-	end
 end
