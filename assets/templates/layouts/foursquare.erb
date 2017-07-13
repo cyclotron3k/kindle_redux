@@ -1,0 +1,40 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title></title>
+	<style>
+		body {
+			padding 0;
+			margin 0;
+			font-size: small;
+		}
+		.wrapper {
+			height: <%= height %>px;
+			width: <%= width %>px;
+		}
+		.wrapper, .wrapper > div {
+			overflow: hidden;
+		}
+		.wrapper > div {
+			float: left;
+			width: <%= width / 2 %>px;
+		}
+		.one, .two {
+			height: <%= height / 3 * 2 %>px;
+		}
+		.three, .four {
+			height: <%= height / 3 * 2 %>px;
+		}
+	</style>
+</head>
+<body>
+	<div class="wrapper">
+		<div class="one"><%= one %></div>
+		<div class="two"><%= two %></div>
+		<div class="three"><%= three %></div>
+		<div class="four"><%= four %></div>
+	</div>
+</body>
+</html>

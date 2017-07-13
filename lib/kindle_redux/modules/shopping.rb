@@ -5,11 +5,7 @@ class KindleRedux::Modules::Shopping
 	include KindleRedux::Modules::Module
 
 	def render
-		canvas.text "Shopping List", x: 10, y: 40, font_size: 30, font_family: 'garamond'
-		get_data.each_with_index do |line, i|
-			canvas.text line, x: 10, y: 62 + (18 * i), font_size: 12, font_family: 'arial'
-		end
-		canvas.render
+		render_template('list.erb', list: get_data, title: "Shopping", empty_text: "Nothing needed")
 	end
 
 	private

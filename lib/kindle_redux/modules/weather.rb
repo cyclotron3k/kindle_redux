@@ -1,6 +1,6 @@
 require 'open-uri'
 require 'nokogiri'
-require 'base64'
+# require 'base64'
 
 class KindleRedux::Modules::Weather
 	include KindleRedux::Modules::Module
@@ -49,24 +49,8 @@ class KindleRedux::Modules::Weather
 		]
 	end
 
-
 	def render
-		data = get_data
-		pp data
-		if data.first[:icon]
-			icon_path = KindleRedux::ASSET_DIR.join data.first[:icon]
-			encoded_image = 'data:image/svg+xml;base64,' + Base64.strict_encode64(File.read icon_path)
-			canvas.image 'xlink:href' => encoded_image, x: 10, y: 10, height: 100, width: 100, preserveAspectRatio: "xMidYMid"
-		end
-		canvas.text "#{data.first[:precis]}", x: '50%', y: 118, font_size: 12, font_family: 'arial', text_anchor: "middle"
-
-		3.times do |i|
-			icon_path = KindleRedux::ASSET_DIR.join data[i + 1][:icon]
-			encoded_image = 'data:image/svg+xml;base64,' + Base64.strict_encode64(File.read icon_path)
-			canvas.image 'xlink:href' => encoded_image, x: "#{33*i}%", y: 130, height: 33, width: 33, preserveAspectRatio: "xMidYMid"
-		end
-
-		canvas.render
+		render_template('weather.erb', days: get_data)
 	end
 
 	private

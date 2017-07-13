@@ -1,0 +1,12 @@
+<div class="events">
+	<h1><%= title %></h1>
+	<% if events.empty? %>
+		<span class="empty"><%= empty_text %></span>
+	<% else %>
+		<ul>
+			<% events.each do |text, date| %>
+				<li><%= text %> <span class="date">(<%= date %>)</span></li>
+			<% end %>
+		</ul>
+	<% end %>
+</div>
