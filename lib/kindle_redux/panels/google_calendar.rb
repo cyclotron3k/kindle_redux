@@ -3,8 +3,10 @@ require 'googleauth'
 require 'googleauth/stores/file_token_store'
 require 'fileutils'
 
-class KindleRedux::Modules::GoogleCalendar
-	include KindleRedux::Modules::Module
+class KindleRedux::Panels::GoogleCalendar
+	include KindleRedux::Panels::Base
+
+	TEMPLATE_FILENAME = 'events.erb'
 
 	OOB_URI = 'urn:ietf:wg:oauth:2.0:oob'
 	APPLICATION_NAME = 'kindle-redux-client-id'

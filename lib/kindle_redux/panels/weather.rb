@@ -1,9 +1,11 @@
 require 'open-uri'
 require 'nokogiri'
-# require 'base64'
 
-class KindleRedux::Modules::Weather
-	include KindleRedux::Modules::Module
+class KindleRedux::Panels::Weather
+	include KindleRedux::Panels::Base
+
+	TEMPLATE_FILENAME = 'weather.erb'
+	CSS_FILENAME = 'weather.scss'
 
 	def initialize
 		@url = 'ftp://ftp.bom.gov.au/anon/gen/fwo/IDN11060.xml'
@@ -50,7 +52,7 @@ class KindleRedux::Modules::Weather
 	end
 
 	def render
-		render_template('weather.erb', days: get_data)
+		render_template(days: get_data)
 	end
 
 	private
@@ -58,9 +60,13 @@ class KindleRedux::Modules::Weather
 	def get_data
 		doc = Nokogiri::XML open(@url)
 		doc.at_css('area[aac="NSW_PT132"]').css('forecast-period').map do |forecast|
+			date = Date.parse forecast.attr('start-time-local')
 			min, max = ['min', 'max'].map { |type| forecast.at_css("element[type=\"air_temperature_#{type}imum\"]") }.map { |x| x.nil? ? ?? : x.text }
+			icon = @day_icons[forecast.at_css('element[type="forecast_icon_code"]').text.to_i]
+			icon_path = KindleRedux::IMAGE_DIR.join icon
 			{
-				icon: @day_icons[forecast.at_css('element[type="forecast_icon_code"]').text.to_i],
+				date: date,
+				icon: icon_path,
 				precis: forecast.at_css('text[type="precis"]').text,
 				rain: forecast.at_css('text[type="probability_of_precipitation"]').text,
 				min_temp: min,

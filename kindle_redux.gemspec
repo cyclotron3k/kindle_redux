@@ -25,7 +25,7 @@ Gem::Specification.new do |spec|
 	spec.add_runtime_dependency 'googleauth/stores/file_token_store'
 	spec.add_runtime_dependency 'fileutils'
 	spec.add_runtime_dependency 'cliver', '~> 0.3'
-	# spec.add_runtime_dependency 'sass', '~> 3.4'
+	spec.add_runtime_dependency 'sass', '~> 3.4'
 	# spec.add_runtime_dependency 'erb', # std-lib
 
 	spec.requirements << 'You\'ll need to install `wkhtmltoimage` if you don\'t already have it'

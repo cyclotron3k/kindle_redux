@@ -1,11 +1,13 @@
 require 'digest/md5'
 require 'evernote-thrift'
 
-class KindleRedux::Modules::Shopping
-	include KindleRedux::Modules::Module
+class KindleRedux::Panels::Shopping
+	include KindleRedux::Panels::Base
+
+	TEMPLATE_FILENAME = 'list.erb'
 
 	def render
-		render_template('list.erb', list: get_data, title: "Shopping", empty_text: "Nothing needed")
+		render_template(list: get_data, title: "Shopping", empty_text: "Nothing needed")
 	end
 
 	private

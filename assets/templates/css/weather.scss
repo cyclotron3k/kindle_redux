@@ -1,0 +1,27 @@
+div.weather {
+	div.day {
+		float: left;
+		width: 33%;
+		height: 33%;
+		&:first-of-type {
+			height: 66%;
+			width: 100%;
+			div.precis {
+				font-size: larger;
+				span.date {
+					display: none;
+				}
+			}
+		}
+		img {
+			width: 95%;
+		}
+		div.precis {
+			display: block;
+			text-align: center;
+			span.date {
+				color: #888;
+			}
+		}
+	}
+}

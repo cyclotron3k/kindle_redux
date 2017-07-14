@@ -1,9 +1,9 @@
 <div class="weather">
-	<h1>Weather</h1>
+	<!--<h1>Weather</h1>-->
 	<% days.first(4).each do |day| %>
 		<div class="day">
-			<img src="<%= day[:icon] %>">
-			<span class="precis"><%= day[:precis] %></span>
+			<img src="<%= day[:icon] %>" />
+			<div class="precis"><span class="date"><%= day[:date].strftime '%A' %> -</span> <%= day[:precis] %></div>
 		</div>
 	<% end %>
 </div>

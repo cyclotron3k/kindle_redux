@@ -5,9 +5,9 @@ KindleRedux.new(
 	height: 800,
 	layout: 'foursquare.erb',
 	panels: [
-		KindleRedux::Modules::Weather.new(),
-		KindleRedux::Modules::Calendar.new(),
-		KindleRedux::Modules::Birthdays.new(),
-		KindleRedux::Modules::Shopping.new(),
+		KindleRedux::Panels::Weather.new(),
+		KindleRedux::Panels::Calendar.new(),
+		KindleRedux::Panels::Birthdays.new(),
+		KindleRedux::Panels::Shopping.new(),
 	],
 ).render('/full/path/output.png')
