@@ -8,7 +8,8 @@ class KindleRedux::Panels::Weather
 	CSS_FILENAME = 'weather.scss'
 
 	def initialize
-		@url = 'ftp://ftp.bom.gov.au/anon/gen/fwo/IDN11060.xml'
+		@forecast_url = 'ftp://ftp.bom.gov.au/anon/gen/fwo/IDN11060.xml'
+		@current_url  = 'ftp://ftp.bom.gov.au/anon/gen/fwo/IDN60920.xml'
 		@day_icons = [
 			nil,
 			'anbileru_adaleru/217714_sun.svg',               # 'Sunny',
@@ -29,26 +30,26 @@ class KindleRedux::Panels::Weather
 			'anbileru_adaleru/217543_storm.svg',             # 'Storm',
 			'anbileru_adaleru/217492_rainfall.svg',          # 'Light shower',
 		]
-		@night_icons = [
-			nil,
-			'anbileru_adaleru/217714_sun.svg',               # 'Sunny',
-			'anbileru_adaleru/217697_night.svg',             # 'Clear',
-			'anbileru_adaleru/217644_clouds.svg',            # 'Partly cloudy',
-			'anbileru_adaleru/217495_sky.svg',               # 'Cloudy',
-			nil,
-			'anbileru_adaleru/217506_foggy-night.svg',       # 'Hazy',
-			nil,
-			'anbileru_adaleru/217527_rainfall-at-night.svg', # 'Light rain',
-			'anbileru_adaleru/451080_wind-vane.svg',         # 'Windy',
-			'anbileru_adaleru/217506_foggy-night.svg',       # 'Fog',
-			'anbileru_adaleru/217527_rainfall-at-night.svg', # 'Shower',
-			'anbileru_adaleru/217518_drizzle.svg',           # 'Rain',
-			'anbileru_adaleru/217506_foggy-night.svg',       # 'Dusty',
-			'anbileru_adaleru/217493_frost.svg',             # 'Frost',
-			'anbileru_adaleru/217581_snow.svg',              # 'Snow',
-			'anbileru_adaleru/217544_storm-at-night.svg',    # 'Storm',
-			'anbileru_adaleru/217527_rainfall-at-night.svg', # 'Light shower',
-		]
+		# @night_icons = [
+		# 	nil,
+		# 	'anbileru_adaleru/217714_sun.svg',               # 'Sunny',
+		# 	'anbileru_adaleru/217697_night.svg',             # 'Clear',
+		# 	'anbileru_adaleru/217644_clouds.svg',            # 'Partly cloudy',
+		# 	'anbileru_adaleru/217495_sky.svg',               # 'Cloudy',
+		# 	nil,
+		# 	'anbileru_adaleru/217506_foggy-night.svg',       # 'Hazy',
+		# 	nil,
+		# 	'anbileru_adaleru/217527_rainfall-at-night.svg', # 'Light rain',
+		# 	'anbileru_adaleru/451080_wind-vane.svg',         # 'Windy',
+		# 	'anbileru_adaleru/217506_foggy-night.svg',       # 'Fog',
+		# 	'anbileru_adaleru/217527_rainfall-at-night.svg', # 'Shower',
+		# 	'anbileru_adaleru/217518_drizzle.svg',           # 'Rain',
+		# 	'anbileru_adaleru/217506_foggy-night.svg',       # 'Dusty',
+		# 	'anbileru_adaleru/217493_frost.svg',             # 'Frost',
+		# 	'anbileru_adaleru/217581_snow.svg',              # 'Snow',
+		# 	'anbileru_adaleru/217544_storm-at-night.svg',    # 'Storm',
+		# 	'anbileru_adaleru/217527_rainfall-at-night.svg', # 'Light shower',
+		# ]
 	end
 
 	def render
@@ -58,8 +59,11 @@ class KindleRedux::Panels::Weather
 	private
 
 	def get_data
-		doc = Nokogiri::XML open(@url)
-		doc.at_css('area[aac="NSW_PT132"]').css('forecast-period').map do |forecast|
+		forecast, current = Parallel.map([@forecast_url, @current_url], in_threads: 2) do |url|
+			Nokogiri::XML open(url)
+		end
+
+		data = forecast.at_css('area[aac="NSW_PT132"]').css('forecast-period').map do |forecast|
 			date = Date.parse forecast.attr('start-time-local')
 			min, max = ['min', 'max'].map { |type| forecast.at_css("element[type=\"air_temperature_#{type}imum\"]") }.map { |x| x.nil? ? ?? : x.text }
 			icon = @day_icons[forecast.at_css('element[type="forecast_icon_code"]').text.to_i]
@@ -73,5 +77,17 @@ class KindleRedux::Panels::Weather
 				max_temp: max,
 			}
 		end
+
+		current.at_css('observations station[bom-id="066062"]').tap do |elements|
+			data.first.merge!(
+				apparent_temp: elements.at_css('element[type="apparent_temp"]').text,
+				air_temperature: elements.at_css('element[type="air_temperature"]').text,
+				humidity: elements.at_css('element[type="rel-humidity"]').text,
+			)
+		end
+
+		pp data
+
+		data
 	end
 end
