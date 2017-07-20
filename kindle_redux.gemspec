@@ -14,19 +14,17 @@ Gem::Specification.new do |spec|
 
 	spec.add_development_dependency "rake", "~> 10.0"
 	spec.add_development_dependency "minitest", "~> 5.0"
+	spec.add_development_dependency "pry"
 
-	spec.add_runtime_dependency 'open-uri'
 	spec.add_runtime_dependency 'nokogiri'
-	spec.add_runtime_dependency 'digest/md5'
+	spec.add_runtime_dependency 'digest'
 	spec.add_runtime_dependency 'evernote-thrift'
 	spec.add_runtime_dependency 'parallel'
-	spec.add_runtime_dependency 'google/apis/calendar_v3'
+	spec.add_runtime_dependency 'google-api-client'
 	spec.add_runtime_dependency 'googleauth'
-	spec.add_runtime_dependency 'googleauth/stores/file_token_store'
-	spec.add_runtime_dependency 'fileutils'
 	spec.add_runtime_dependency 'cliver', '~> 0.3'
 	spec.add_runtime_dependency 'sass', '~> 3.4'
-	# spec.add_runtime_dependency 'erb', # std-lib
 
 	spec.requirements << 'You\'ll need to install `wkhtmltoimage` if you don\'t already have it'
 end
+

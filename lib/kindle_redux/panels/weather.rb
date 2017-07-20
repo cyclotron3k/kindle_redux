@@ -86,8 +86,6 @@ class KindleRedux::Panels::Weather
 			)
 		end
 
-		pp data
-
 		data
 	end
 end
