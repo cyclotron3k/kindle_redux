@@ -34,7 +34,11 @@ class KindleRedux
 		template = ERB.new(template_path.read)
 
 		panel_data = Parallel.map(@panels.flatten(1), in_threads: 4) do |panel|
-			[panel.get_css, panel.render]
+			begin
+				[panel.get_css, panel.render]
+			rescue => e
+				[nil, "There was an errror with #{panel.class}: #{e.message}"]
+			end
 		end
 
 		css = panel_data.map(&:first).compact.map do |css_fragment|
